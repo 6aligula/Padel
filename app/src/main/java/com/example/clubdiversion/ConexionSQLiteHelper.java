@@ -18,6 +18,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(Utilidades.CREA_TABLA_DOC);
         db.execSQL(Utilidades.CREA_TABLA_DUDA);
         db.execSQL(Utilidades.CREA_TABLA_INSTA);
+        db.execSQL(Utilidades.CREAR_TABLA_USERS); // Nueva tabla de usuarios
 
     }//TABLA_SOCIO
 
@@ -27,6 +28,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+Utilidades.T_Doc);
         db.execSQL("DROP TABLE IF EXISTS "+Utilidades.T_Duda);
         db.execSQL("DROP TABLE IF EXISTS "+Utilidades.T_INST);
+        db.execSQL("DROP TABLE IF EXISTS " + Utilidades.TABLA_USERS); // Nueva tabla de usuarios
         onCreate(db);
 
     }

@@ -18,6 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClubDiversion"
         android:usesCleartextTraffic="true">
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".RegisterActivity"></activity>
         <activity
             android:name=".prueba"
             android:exported="true">

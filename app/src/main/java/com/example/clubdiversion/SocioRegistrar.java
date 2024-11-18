@@ -19,7 +19,17 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.clubdiversion.Entidades.LoginRequest;
+import com.example.clubdiversion.Entidades.LoginResponse;
+import com.example.clubdiversion.Entidades.RegisterRequest;
+import com.example.clubdiversion.Entidades.RegisterResponse;
+import com.example.clubdiversion.Utilidades.ApiService;
+import com.example.clubdiversion.Utilidades.RetrofitClient;
 import com.example.clubdiversion.Utilidades.Utilidades;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class SocioRegistrar extends AppCompatActivity {
 
@@ -59,8 +69,8 @@ public class SocioRegistrar extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        tipoSocSocio = findViewById(R.id.tipoSocSocio);
-        tipoAdmSocio = findViewById(R.id.tipoAdmSocio);
+        //tipoSocSocio = findViewById(R.id.tipoSocSocio);
+        //tipoAdmSocio = findViewById(R.id.tipoAdmSocio);
 
         editNIPSocio = findViewById(R.id.editNIPSocio);
         editNombreSocio = findViewById(R.id.editNombreSocio);
@@ -166,7 +176,14 @@ public class SocioRegistrar extends AppCompatActivity {
     }
 
     public void Validar(View view) {
-        registrarSocio();
+        String username = editNIPSocio.getText().toString().trim();
+        String password = editPassSocio.getText().toString().trim();
+
+        if (!username.isEmpty() && !password.isEmpty()) {
+            login(username, password);
+        } else {
+            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void listar(View view) {
@@ -277,4 +294,64 @@ public class SocioRegistrar extends AppCompatActivity {
         }
         db.close();
     }
+
+    private void login(String username, String password) {
+        ApiService apiService = RetrofitClient.getApiService();
+        LoginRequest loginRequest = new LoginRequest(username, password);
+
+        apiService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()) {
+                    LoginResponse loginResponse = response.body();
+                    String token = loginResponse.getToken();
+
+                    // Guardar datos en SQLite
+                    ConexionSQLiteHelper conn = new ConexionSQLiteHelper(SocioRegistrar.this, "clubdiversion", null, 1);
+                    SQLiteDatabase db = conn.getWritableDatabase();
+                    Utilidades.insertUser(loginResponse.getUsername(), loginResponse.getEmail(), token, db);
+                    db.close();
+
+                    Toast.makeText(SocioRegistrar.this, "Bienvenido, " + loginResponse.getUsername(), Toast.LENGTH_SHORT).show();
+
+                    // Redirigir al usuario
+                    Intent intent = new Intent(SocioRegistrar.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(SocioRegistrar.this, "Inicio de sesión fallido", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(SocioRegistrar.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void register(String nip, String nombre, String direccion, String telefono, String password) {
+        ApiService apiService = RetrofitClient.getApiService();
+
+        RegisterRequest registerRequest = new RegisterRequest(nip, nombre, direccion, telefono, password);
+
+        apiService.register(registerRequest).enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                if (response.isSuccessful()) {
+                    RegisterResponse registerResponse = response.body();
+                    Toast.makeText(SocioRegistrar.this, "Usuario registrado: " + registerResponse.getUsername(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SocioRegistrar.this, "Error en el registro", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Toast.makeText(SocioRegistrar.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

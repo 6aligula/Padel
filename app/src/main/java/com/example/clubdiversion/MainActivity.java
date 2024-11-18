@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,39 +31,21 @@ public class MainActivity extends AppCompatActivity {
         Inicio();
     }
 
-    public void Inicio()
-    {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.BASE_DATOS,null,1);
-        SQLiteDatabase db = conn.getWritableDatabase();
+    public void Inicio() {
+        // Verificar si el usuario está logueado
+        SharedPreferences preferences = getSharedPreferences("appPrefs", MODE_PRIVATE);
+        String token = preferences.getString("token", null); // Recuperar el token de sesión
 
-        String query ="SELECT  * FROM "+Utilidades.TABLA_SOCIO+" WHERE "+Utilidades. SOCIO_S_A+" = 1";
-        Cursor c= Utilidades.Listar_Tabla(db,query);
-        c.moveToFirst();
-        if(c != null && c.getCount()>0)
-        {
-            do
-            {
-                int c0= c.getInt(0);
-                String c1= c.getString(1);
-                String c2= c.getString(2);
-                String c3= c.getString(3);
-                String c4= c.getString(4);
-                String c5= c.getString(5);
-                String c6= c.getString(6);
-                Log.e("Salida","id="+c0+"  "+c1+"   "+c2+"  "+c3+"   "+c4+"  "+c5+"  "+c6);
-            }while (c.moveToNext());
-        }
-        else
-        {
-            Intent intent = new Intent(getApplicationContext(), SocioRegistrar.class);
+        if (token == null || token.isEmpty()) {
+            // Si no hay token, redirigir al LoginActivity
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
+            finish(); // Finalizar MainActivity para que no se quede en el stack
+        } else {
+            // Si hay token, continuar en MainActivity
+            Toast.makeText(this, "Usuario autenticado", Toast.LENGTH_SHORT).show();
         }
-
-        c.close();
-        db.close();
-        db.close();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

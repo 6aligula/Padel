@@ -45,16 +45,42 @@ public class Registro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
-        // Configurar Toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Bloquear orientación en vertical
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        // Configuración de campos de entrada
-        editSocioRegistro = findViewById(R.id.editSocioRegistro);
-        editPasswordRegistro = findViewById(R.id.editPasswordRegistro);
-        editSocioRegistro.requestFocus();
+        setContentView(R.layout.activity_socio);
+
+        // Conexión a la base de datos SQLite
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "clubdiversion", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+
+        // Consultar si hay un usuario registrado en SQLite
+        Cursor cursor = Utilidades.getUser(db);
+
+        if (cursor.moveToFirst()) {
+            // Validar que las columnas existen en el cursor
+            int usernameIndex = cursor.getColumnIndex(Utilidades.COL_USERNAME);
+            int emailIndex = cursor.getColumnIndex(Utilidades.COL_EMAIL);
+
+            if (usernameIndex >= 0 && emailIndex >= 0) {
+                // Obtener datos del usuario desde el cursor
+                String username = cursor.getString(usernameIndex);
+                String email = cursor.getString(emailIndex);
+                Toast.makeText(this, "Bienvenido de nuevo, " + username, Toast.LENGTH_SHORT).show();
+
+                // Redirigir al usuario a la actividad principal
+                Intent intent = new Intent(Registro.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                // Manejo de error si las columnas no existen
+                Toast.makeText(this, "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // Si no hay usuario, mostrar mensaje y continuar con el flujo normal
+            Toast.makeText(this, "Por favor, inicia sesión o regístrate", Toast.LENGTH_SHORT).show();
+        }
+
+        // Cerrar el cursor y la base de datos para liberar recursos
+        cursor.close();
+        db.close();
     }
 
     public void Login(View view) {
