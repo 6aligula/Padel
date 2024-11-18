@@ -68,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("token", loginResponse.getToken());
                     editor.apply();
 
-                    // Redirigir al MainActivity
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    // Redirigir al Instalaciones
+                    Intent intent = new Intent(LoginActivity.this, Instalaciones.class);
                     startActivity(intent);
                     finish();
                 } else {

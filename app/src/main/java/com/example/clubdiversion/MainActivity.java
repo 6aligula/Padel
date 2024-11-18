@@ -57,13 +57,32 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId(); // Obtén el ID del elemento seleccionado
         Intent intent;
 
-        if (id == R.id.Registra) {
-            intent = new Intent(this, Registro.class);
+        if (id == R.id.Instalaciones) {
+            // Redirige a la actividad Instalaciones
+            intent = new Intent(this, Instalaciones.class);
             startActivity(intent);
+        } else if (id == R.id.Logout) {
+            // Cierra sesión y redirige al LoginActivity
+            logout();
         } else if (id == R.id.Salir) {
+            // Cierra la aplicación
             finish();
         }
         return true;
+    }
+
+    // Método para cerrar sesión
+    private void logout() {
+        // Eliminar el token de SharedPreferences
+        SharedPreferences preferences = getSharedPreferences("appPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("token"); // Eliminar el token almacenado
+        editor.apply();
+
+        // Redirigir al LoginActivity
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish(); // Finalizar MainActivity
     }
 
     @Override

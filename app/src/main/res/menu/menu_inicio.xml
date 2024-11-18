@@ -3,11 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Iniciar Sección"
-        android:id="@+id/Registra"
-        android:icon="@drawable/login"
-        app:showAsAction="always"
-        />
+        android:id="@+id/Instalaciones"
+        android:title="Instalaciones"
+        android:icon="@drawable/ic_instalaciones"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/Logout"
+        android:title="Logout"
+        android:icon="@drawable/ic_logout"
+        app:showAsAction="ifRoom" />
 
     <item
         android:title="Salir"
