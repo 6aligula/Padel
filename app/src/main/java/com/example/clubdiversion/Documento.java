@@ -51,28 +51,27 @@ public class Documento extends AppCompatActivity {
         editDecDocum = findViewById(R.id.editDecDocum);
         editLinkDocum = findViewById(R.id.editLinkDocum);
         spiDesDoc = findViewById(R.id.spiDesDoc);
-        String so="";
-        if(Utilidades.SOCIO_ADMINISTRADOR==1)
-        {
-            so="Administrador";
-        }
-        else
-        {
-            so="Socio";
+
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "club_diversion", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+
+        String userType = Utilidades.isCurrentUserAdmin(db) ? "Administrador" : "Socio";
+        txtNonDoc.setText(userType);
+
+        if (!Utilidades.isCurrentUserAdmin(db)) {
             editDecDocum.setEnabled(false);
             editLinkDocum.setEnabled(false);
             btnAceptarDocum.setVisibility(View.INVISIBLE);
         }
 
-        txtNonDoc.setText(so+": "+Utilidades.NOMBRE_SOCIO);
-        //editLinkDocum.setText("https://repositorio.uchile.cl/tesis/uchile/2010/ec-gonzalez_mj/pdfAmont/ec-gonzalez_mj.pdf");
-        Lista();
+        db.close();
+
         Lista();
     }
 
     private void Lista()
     {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.BASE_DATOS,null,1);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "club_diversion", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
         String query ="SELECT  * FROM "+Utilidades.T_Doc+" WHERE 1";
         Cursor c= Utilidades.Listar_Tabla(db,query);
@@ -148,35 +147,34 @@ public class Documento extends AppCompatActivity {
     
 
     public void VerDoc(View view) {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.BASE_DATOS,null,1);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "club_diversion", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
 
-        String Descripcion;
-        Descripcion = editDecDocum.getText().toString().trim();
-        String Link = editLinkDocum.getText().toString().trim();
-        ContentValues values = ValidarCampos(Descripcion,Link);
+        String descripcion = editDecDocum.getText().toString().trim();
+        String link = editLinkDocum.getText().toString().trim();
+
+        ContentValues values = ValidarCampos(descripcion, link);
         if(values.getAsString(Utilidades.DOC_DES).equals(""))
         {
             Toast.makeText(getApplicationContext(), "Algún campo esta vacio!!!", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            String query ="SELECT * FROM "+Utilidades.T_Doc +" WHERE "+Utilidades.DOC_DES+" ='"+Descripcion+"'";
+            String query = "SELECT * FROM " + Utilidades.T_Doc + " WHERE " + Utilidades.DOC_DES + " ='" + descripcion + "'";
             if(Utilidades.BuscaLogica(db , query))
             {
                 Toast.makeText(getApplicationContext(), "Descripción ya registrada", Toast.LENGTH_SHORT).show();
             }
             else
             {
-                if(Utilidades.SOCIO_ADMINISTRADOR==1)
-                {
-                    Long i= Utilidades.Insertar_En_Tabla(Utilidades.T_Doc, values, db);
-                    Log.e("Salida","Long = "+i);
-                    Log.e("Salida",values.toString());
+                if (Utilidades.isCurrentUserAdmin(db)) {
+                    long i = Utilidades.Insertar_En_Tabla(Utilidades.T_Doc, values, db);
+                    Log.e("Salida", "Long = " + i);
+                    Log.e("Salida", values.toString());
                     Lista();
-                }
-                else
+                } else {
                     Toast.makeText(getApplicationContext(), "Usted no es Administrador!!!", Toast.LENGTH_SHORT).show();
+                }
             }
 
         }

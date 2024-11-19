@@ -88,13 +88,6 @@ public class Reservaciones extends AppCompatActivity {
 
         techado.setText("Techado: "+bundle.getString("techado"));
 
-        /*
-        intent.putExtra("capacidad",capacidad[num]);
-        intent.putExtra("techado",techado[num]);
-        intent.putExtra("area",area[num]);*/
-
-
-
         final Calendar calendario = Calendar.getInstance();
         ultimoAnio = calendario.get(Calendar.YEAR);
         ultimoMes = calendario.get(Calendar.MONTH);
@@ -108,9 +101,9 @@ public class Reservaciones extends AppCompatActivity {
                 dialogoFecha.show();
             }
         });
-        txtSocioReser.setText(Utilidades.NOMBRE_SOCIO);
 
-        //Mostrar
+        // Recuperar nombre del usuario desde la base de datos
+        loadUserName();
 
     }
     public void refrescarFechaEnEditText() {
@@ -145,55 +138,65 @@ public class Reservaciones extends AppCompatActivity {
         }
     };
 
-
-
-    public void btnAceptarInsta(View view)
-    {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.BASE_DATOS,null,1);
-        SQLiteDatabase db = conn.getWritableDatabase();
+    public void btnAceptarInsta(View view) {
         String FECHA = editfechaReser.getText().toString().trim();
-        ContentValues values = new ContentValues();
-        values.put(Utilidades.INST_FECHA,FECHA);
-        values.put(Utilidades.INST_ID_INST,NumeroReservacion);;
+        if (!FECHA.equals("Pulse aquí para la fecha")) {
+            ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "club_diversion", null, 1);
+            SQLiteDatabase db = conn.getWritableDatabase();
 
-        if(!editfechaReser.getText().toString().trim().equals("Pulse aquí para la fecha"))
-        {
-            String query ="SELECT * FROM "+Utilidades.T_INST +" WHERE "+Utilidades.INST_FECHA+" ='"+FECHA+"' and "+Utilidades.INST_ID_INST+"='"+NumeroReservacion+"'";
-            Log.e("Salida",query);
-            if(Utilidades.BuscaLogica(db , query))
-            {
+            String query = "SELECT * FROM " + Utilidades.T_INST + " WHERE " + Utilidades.INST_FECHA + " ='" + FECHA +
+                    "' AND " + Utilidades.INST_ID_INST + "='" + NumeroReservacion + "'";
+            if (Utilidades.BuscaLogica(db, query)) {
                 Toast.makeText(getApplicationContext(), "Instalación ya reservada", Toast.LENGTH_SHORT).show();
+            } else {
+                ContentValues values = new ContentValues();
+                values.put(Utilidades.INST_FECHA, FECHA);
+                values.put(Utilidades.INST_ID_INST, NumeroReservacion);
+                Utilidades.Insertar_En_Tabla(Utilidades.T_INST, values, db);
+                Toast.makeText(getApplicationContext(), "Reservación realizada", Toast.LENGTH_SHORT).show();
             }
-            else
-            {
-                Utilidades.Insertar_En_Tabla(Utilidades.T_INST,values,db);
-                Toast.makeText(getApplicationContext(), "Reservavión realizada", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
+            db.close();
+        } else {
             Toast.makeText(getApplicationContext(), "Seleccione la fecha", Toast.LENGTH_SHORT).show();
-        db.close();
+        }
     }
 
-    public void bntListReser(View view)
-    {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.BASE_DATOS,null,1);
+    public void bntListReser(View view) {
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "club_diversion", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
-        String query ="SELECT * FROM "+Utilidades.T_INST +" WHERE 1";
-        Cursor c = Utilidades.Listar_Tabla(db, query);
-        c.moveToFirst();
-        if(c != null && c.getCount()>0)
-            do
-            {
-                int c0= c.getInt(0);
-                String c1= c.getString(1);
-                String c2= c.getString(2);
-                Log.e("Salida","id="+c0+"  "+c1+"   "+c2+"  ");
 
-            }while (c.moveToNext());
-        else
-            Log.e("Salida","Vacio");
-        c.close();
+        String query = "SELECT * FROM " + Utilidades.T_INST + " WHERE 1";
+        Cursor c = Utilidades.Listar_Tabla(db, query);
+
+        if (c != null && c.moveToFirst()) {
+            do {
+                int c0 = c.getInt(0);
+                String c1 = c.getString(1);
+                String c2 = c.getString(2);
+                Log.e("Salida", "id=" + c0 + "  " + c1 + "   " + c2 + "  ");
+            } while (c.moveToNext());
+        } else {
+            Log.e("Salida", "Vacio");
+        }
+
+        if (c != null) c.close();
+        db.close();
+    }
+    private void loadUserName() {
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "club_diversion", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+
+        String query = "SELECT " + Utilidades.CAMPO_NAME + " FROM " + Utilidades.TABLA_USERS + " LIMIT 1";
+        Cursor cursor = Utilidades.Listar_Tabla(db, query);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            String userName = cursor.getString(0); // CAMPO_NAME
+            txtSocioReser.setText(String.format("   %s", userName));
+            cursor.close();
+        } else {
+            txtSocioReser.setText("   Usuario desconocido");
+        }
+
         db.close();
     }
 }

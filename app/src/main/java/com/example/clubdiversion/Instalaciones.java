@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +36,9 @@ public class Instalaciones extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         Intent intent;
+
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "club_diversion", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
     
         if (id == R.id.Item1) {
             intent = new Intent(this, Duda.class);
@@ -42,7 +47,7 @@ public class Instalaciones extends AppCompatActivity {
             intent = new Intent(this, Documento.class);
             startActivity(intent);
         } else if (id == R.id.Item3) {
-            if (Utilidades.SOCIO_ADMINISTRADOR == 1) {
+            if (Utilidades.isCurrentUserAdmin(db)) {
                 intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
             } else {

@@ -55,21 +55,19 @@ public class Duda extends AppCompatActivity {
 
         btnaceptarDuda = findViewById(R.id.btnaceptarDuda);
         btnRespDuda = findViewById(R.id.btnRespDuda);
-        String so="";
-        if(Utilidades.SOCIO_ADMINISTRADOR==1)
-            so="Administrador";
-        else
-            so="Socio";
-        txtSocioDuda.setText(so+": "+Utilidades.NOMBRE_SOCIO);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "club_diversion", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
 
+        String userType = Utilidades.isCurrentUserAdmin(db) ? "Administrador" : "Socio";
+        txtSocioDuda.setText(userType);
 
-        Log.e("Salida","socadm"+Utilidades.SOCIO_ADMINISTRADOR);
-        if(Utilidades.SOCIO_ADMINISTRADOR==0)
-        {
+        if (!Utilidades.isCurrentUserAdmin(db)) {
             editTextoRespDuda.setEnabled(false);
             editTextoRespDuda.setText("Por responder");
             btnRespDuda.setVisibility(View.INVISIBLE);
         }
+
+        db.close();
 
         spiDuda = findViewById(R.id.spiDuda);
 
@@ -91,7 +89,7 @@ public class Duda extends AppCompatActivity {
     }
     private void Lista()
     {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.BASE_DATOS,null,1);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "club_diversion", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
         String query ="SELECT * FROM "+Utilidades.T_Duda+" WHERE 1";
         Log.e("Salida",query);
@@ -126,8 +124,16 @@ public class Duda extends AppCompatActivity {
                         editTextoDuda.setText(spiDuda.getItemAtPosition(i).toString());
                         editTextoRespDuda.setText(Links.get(i).toString());
                         editTextoDuda.setEnabled(false);
-                        if(Utilidades.SOCIO_ADMINISTRADOR==1)
+
+                        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "club_diversion", null, 1);
+                        SQLiteDatabase db = conn.getReadableDatabase();
+
+                        if (Utilidades.isCurrentUserAdmin(db)) {
                             editTextoRespDuda.setEnabled(true);
+                        }
+
+                        db.close();
+
                         btnaceptarDuda.setEnabled(false);
                         btnRespDuda.setEnabled(true);
                     }
@@ -191,7 +197,7 @@ public class Duda extends AppCompatActivity {
     }
     public void btnCreaDuda(View view)
     {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.BASE_DATOS,null,1);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "club_diversion", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
 
         String Duda;
@@ -229,7 +235,7 @@ public class Duda extends AppCompatActivity {
 
     public void btnRespDuda(View view)
     {
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.BASE_DATOS,null,1);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "club_diversion", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
         String DUDA = editTextoDuda.getText().toString().trim();
         String RESPDUDA = editTextoRespDuda.getText().toString().trim();
@@ -246,9 +252,14 @@ public class Duda extends AppCompatActivity {
 
     public void bntIniciar(View view)
     {
-        editTextoDuda.setEnabled(true);
-        if(Utilidades.SOCIO_ADMINISTRADOR==1)
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "club_diversion", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+
+        if (Utilidades.isCurrentUserAdmin(db)) {
             editTextoRespDuda.setEnabled(true);
+        }
+
+        db.close();
         btnaceptarDuda.setEnabled(true);
         editTextoRespDuda.setText("");
         editTextoDuda.setText("");

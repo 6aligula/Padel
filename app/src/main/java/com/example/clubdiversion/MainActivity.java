@@ -59,29 +59,18 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = null;
 
         try {
-            cursor = db.rawQuery("SELECT * FROM " + Utilidades.TABLA_USERS + " LIMIT 1", null);
+            // Usar el metodo genérico Listar_Tabla
+            cursor = Utilidades.Listar_Tabla(db, "SELECT * FROM " + Utilidades.TABLA_USERS + " LIMIT 1");
 
             if (cursor.moveToFirst()) {
-                int idIndex = cursor.getColumnIndex(Utilidades.CAMPO_ID);
-                int nameIndex = cursor.getColumnIndex(Utilidades.CAMPO_NAME);
-                int direccionIndex = cursor.getColumnIndex(Utilidades.CAMPO_DIRECCION);
-                int telefonoIndex = cursor.getColumnIndex(Utilidades.CAMPO_TELEFONO);
-                int usernameIndex = cursor.getColumnIndex(Utilidades.CAMPO_USERNAME);
-                int isAdminIndex = cursor.getColumnIndex(Utilidades.CAMPO_IS_ADMIN);
-
-                // Verifica que los índices sean válidos
-                if (idIndex != -1 && nameIndex != -1 && direccionIndex != -1 && telefonoIndex != -1 &&
-                        usernameIndex != -1 && isAdminIndex != -1) {
-
-                    usuario = new SocioDB(
-                            cursor.getInt(idIndex),
-                            cursor.getString(nameIndex),
-                            cursor.getString(direccionIndex),
-                            cursor.getString(telefonoIndex),
-                            cursor.getString(usernameIndex),
-                            cursor.getInt(isAdminIndex) == 1 // Convertir de int a boolean
-                    );
-                }
+                usuario = new SocioDB(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(Utilidades.CAMPO_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Utilidades.CAMPO_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Utilidades.CAMPO_DIRECCION)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Utilidades.CAMPO_TELEFONO)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Utilidades.CAMPO_USERNAME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(Utilidades.CAMPO_IS_ADMIN)) == 1 // Convertir de int a boolean
+                );
             }
         } catch (Exception e) {
             Log.e("SQLiteError", "Error al recuperar el usuario: " + e.getMessage());
@@ -91,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
             }
             db.close();
         }
+
         return usuario;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,7 +113,9 @@ public class MainActivity extends AppCompatActivity {
         ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "club_diversion", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
 
-        int result = db.delete(Utilidades.TABLA_USERS, null, null);
+        // Usar el método genérico Eliminar_Tabla
+        int result = Utilidades.Eliminar_Tabla(Utilidades.TABLA_USERS, null, null, db);
+
         if (result > 0) {
             Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
         } else {

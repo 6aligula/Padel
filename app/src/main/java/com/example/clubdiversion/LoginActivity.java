@@ -2,7 +2,6 @@ package com.example.clubdiversion;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
@@ -95,7 +94,8 @@ public class LoginActivity extends AppCompatActivity {
         values.put(Utilidades.CAMPO_IS_ADMIN, loginResponse.isAdmin() ? 1 : 0);
         values.put(Utilidades.CAMPO_TOKEN, loginResponse.getToken());
 
-        long result = db.insert(Utilidades.TABLA_USERS, null, values);
+        // Usando el metodo genérico de Utilidades
+        long result = Utilidades.Insertar_En_Tabla(Utilidades.TABLA_USERS, values, db);
         if (result == -1) {
             Toast.makeText(this, "Error al guardar el usuario en la base de datos", Toast.LENGTH_SHORT).show();
         } else {

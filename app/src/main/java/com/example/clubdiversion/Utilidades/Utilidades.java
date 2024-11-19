@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.util.Queue;
 
 public class Utilidades {
 
@@ -27,31 +26,6 @@ public class Utilidades {
                     CAMPO_TELEFONO + " TEXT, " +
                     CAMPO_IS_ADMIN + " INTEGER, " + // 0 = false, 1 = true
                     CAMPO_TOKEN + " TEXT)";
-
-    //CAMPOS socio
-    public static final String BASE_DATOS = "club";
-    public static final String TABLA_SOCIO = "socio";
-    public static final String SOCIO_ID = "id";
-    public static final String SOCIO_NIP = "nip";
-    public static final String SOCIO_NOMBRE = "Nombre";
-    public static final String SOCIO_DIRECCION = "Direccion";
-    public static final String SOCIO_TLF = "Tlf";
-    public static final String SOCIO_S_A = "SocAdm";
-    public static final String SOCIO_PASS = "Pass";
-    public static final String SOCIO_REPASS = "Repass";
-    public static int SOCIO_ADMINISTRADOR=0;
-    public static String NOMBRE_SOCIO;
-    public static int SO_AD_ID;
-
-    //CREA TABLA socio
-    public static final String CREAR_TABLA_SOCIO = "CREATE TABLE "+TABLA_SOCIO +
-            "("+SOCIO_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            ""+SOCIO_NIP+" TEXT," +
-            ""+SOCIO_NOMBRE+" TEXT," +
-            ""+SOCIO_DIRECCION+" TEXT," +
-            ""+SOCIO_TLF+" TEXT," +
-            ""+SOCIO_S_A+" tinyint(1), " +
-            ""+SOCIO_PASS+" TEXT)";
 
 
     //CAMPOS documento
@@ -139,7 +113,25 @@ public class Utilidades {
         return i;
     }
 
+    public static boolean isCurrentUserAdmin(SQLiteDatabase db) {
+        boolean isAdmin = false;
+        Cursor cursor = null;
 
+        try {
+            String query = "SELECT " + CAMPO_IS_ADMIN + " FROM " + TABLA_USERS + " LIMIT 1";
+            cursor = db.rawQuery(query, null);
 
+            if (cursor != null && cursor.moveToFirst()) {
+                int isAdminValue = cursor.getInt(0); // CAMPO_IS_ADMIN
+                isAdmin = isAdminValue == 1;
+            }
+        } catch (Exception e) {
+            Log.e("Utilidades", "Error al verificar administrador: " + e.getMessage());
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+
+        return isAdmin;
+    }
 
 }
