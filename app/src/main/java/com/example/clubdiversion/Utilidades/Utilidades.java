@@ -9,18 +9,24 @@ import java.util.Queue;
 
 public class Utilidades {
 
-    // Definición de tabla usuarios
     public static final String TABLA_USERS = "users";
-    public static final String COL_ID = "id";
-    public static final String COL_USERNAME = "username";
-    public static final String COL_EMAIL = "email";
-    public static final String COL_TOKEN = "token";
+    public static final String CAMPO_ID = "id";
+    public static final String CAMPO_USERNAME = "username";
+    public static final String CAMPO_NAME = "name";
+    public static final String CAMPO_DIRECCION = "direccion";
+    public static final String CAMPO_TELEFONO = "telefono";
+    public static final String CAMPO_IS_ADMIN = "isAdmin";
+    public static final String CAMPO_TOKEN = "token";
 
-    public static final String CREAR_TABLA_USERS = "CREATE TABLE " + TABLA_USERS + " (" +
-            COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COL_USERNAME + " TEXT, " +
-            COL_EMAIL + " TEXT, " +
-            COL_TOKEN + " TEXT)";
+    public static final String CREAR_TABLA_USERS =
+            "CREATE TABLE " + TABLA_USERS + " (" +
+                    CAMPO_ID + " INTEGER PRIMARY KEY, " +
+                    CAMPO_USERNAME + " TEXT, " +
+                    CAMPO_NAME + " TEXT, " +
+                    CAMPO_DIRECCION + " TEXT, " +
+                    CAMPO_TELEFONO + " TEXT, " +
+                    CAMPO_IS_ADMIN + " INTEGER, " + // 0 = false, 1 = true
+                    CAMPO_TOKEN + " TEXT)";
 
     //CAMPOS socio
     public static final String BASE_DATOS = "club";
@@ -133,24 +139,7 @@ public class Utilidades {
         return i;
     }
 
-    public static void insertUser(String username, String email, String token, SQLiteDatabase db) {
-        ContentValues values = new ContentValues();
-        values.put(Utilidades.COL_USERNAME, username);
-        values.put(Utilidades.COL_EMAIL, email);
-        values.put(Utilidades.COL_TOKEN, token);
-        db.insert(Utilidades.TABLA_USERS, null, values);
-    }
-    public static Cursor getUser(SQLiteDatabase db) {
-        return db.rawQuery("SELECT * FROM " + Utilidades.TABLA_USERS + " LIMIT 1", null);
-    }
-    public void updateToken(String token, SQLiteDatabase db) {
-        ContentValues values = new ContentValues();
-        values.put(Utilidades.COL_TOKEN, token);
-        db.update(Utilidades.TABLA_USERS, values, null, null);
-    }
-    public void deleteUser(SQLiteDatabase db) {
-        db.delete(Utilidades.TABLA_USERS, null, null);
-    }
+
 
 
 }

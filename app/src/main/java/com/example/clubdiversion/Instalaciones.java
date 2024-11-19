@@ -43,7 +43,7 @@ public class Instalaciones extends AppCompatActivity {
             startActivity(intent);
         } else if (id == R.id.Item3) {
             if (Utilidades.SOCIO_ADMINISTRADOR == 1) {
-                intent = new Intent(this, SocioRegistrar.class);
+                intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(getApplicationContext(), "Usted no es Administrador", Toast.LENGTH_SHORT).show();

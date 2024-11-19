@@ -1,7 +1,9 @@
 package com.example.clubdiversion;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import com.example.clubdiversion.Utilidades.ApiService;
 import com.example.clubdiversion.Utilidades.RetrofitClient;
 import com.example.clubdiversion.Entidades.LoginRequest;
 import com.example.clubdiversion.Entidades.LoginResponse;
+import com.example.clubdiversion.Utilidades.Utilidades;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,12 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     LoginResponse loginResponse = response.body();
-
-                    // Guardar token en SharedPreferences
-                    SharedPreferences preferences = getSharedPreferences("appPrefs", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("token", loginResponse.getToken());
-                    editor.apply();
+                    saveUserToDatabase(loginResponse);
 
                     // Redirigir al Instalaciones
                     Intent intent = new Intent(LoginActivity.this, Instalaciones.class);
@@ -82,6 +80,29 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void saveUserToDatabase(LoginResponse loginResponse) {
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "club_diversion", null, 1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Utilidades.CAMPO_ID, loginResponse.getId());
+        values.put(Utilidades.CAMPO_USERNAME, loginResponse.getUsername());
+        values.put(Utilidades.CAMPO_NAME, loginResponse.getName());
+        values.put(Utilidades.CAMPO_DIRECCION, loginResponse.getDireccion());
+        values.put(Utilidades.CAMPO_TELEFONO, loginResponse.getTelefono());
+        values.put(Utilidades.CAMPO_IS_ADMIN, loginResponse.isAdmin() ? 1 : 0);
+        values.put(Utilidades.CAMPO_TOKEN, loginResponse.getToken());
+
+        long result = db.insert(Utilidades.TABLA_USERS, null, values);
+        if (result == -1) {
+            Toast.makeText(this, "Error al guardar el usuario en la base de datos", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Usuario guardado exitosamente", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
     }
 
 }
