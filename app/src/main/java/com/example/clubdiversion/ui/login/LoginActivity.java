@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.clubdiversion.Instalaciones;
 import com.example.clubdiversion.R;
-import com.example.clubdiversion.RegisterActivity;
+import com.example.clubdiversion.ui.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity implements LoginContract.View {
 
@@ -81,4 +81,3 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         finish();
     }
 }
-

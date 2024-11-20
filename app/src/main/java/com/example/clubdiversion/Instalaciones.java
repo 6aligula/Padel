@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clubdiversion.Utilidades.Utilidades;
+import com.example.clubdiversion.data.database.ConexionSQLiteHelper;
+import com.example.clubdiversion.ui.register.RegisterActivity;
 
 public class Instalaciones extends AppCompatActivity {
 
