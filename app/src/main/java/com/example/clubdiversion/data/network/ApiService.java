@@ -7,8 +7,11 @@ import com.example.clubdiversion.data.entities.RegisterResponse;
 import com.example.clubdiversion.data.entities.ReservationRequest;
 import com.example.clubdiversion.data.entities.ReservationResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ApiService {
@@ -27,6 +30,12 @@ public interface ApiService {
 
     @POST("api/users/profile/")
     Call<LoginResponse> getProfile(@retrofit2.http.Header("Authorization") String token);
+    @GET("api/reservations/get/")
+    Call<List<ReservationResponse>> getReservations(
+            @retrofit2.http.Header("Authorization") String token
+    );
+
+
 
 }
 

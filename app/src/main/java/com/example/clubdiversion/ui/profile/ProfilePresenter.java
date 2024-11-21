@@ -1,12 +1,18 @@
 package com.example.clubdiversion.ui.profile;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.content.Context;
+import android.util.Log;
 
 import com.example.clubdiversion.data.entities.LoginResponse;
+import com.example.clubdiversion.data.entities.ReservationResponse;
 import com.example.clubdiversion.data.entities.SocioDB;
 import com.example.clubdiversion.data.network.ApiService;
 import com.example.clubdiversion.data.network.RetrofitClient;
 import com.example.clubdiversion.data.repository.UserRepository;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,6 +25,46 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     public ProfilePresenter(ProfileContract.View view, Context context) {
         this.view = view;
         this.userRepository = new UserRepository(context);
+    }
+
+    @Override
+    public void loadReservations() {
+        view.showLoading();
+
+        String token = userRepository.getToken();
+        Log.d(TAG, "Token obtenido: " + token); // Log del token
+        if (token == null) {
+            view.showError("El usuario no ha iniciado sesión");
+            view.hideLoading();
+            return;
+        }
+        // Agregar el prefijo "Bearer"
+        token = "Bearer " + token;
+
+        ApiService apiService = RetrofitClient.getApiService();
+        Log.d(TAG, "Realizando petición a /api/reservations/get/"); // Log antes de enviar la petición
+        apiService.getReservations(token).enqueue(new Callback<List<ReservationResponse>>() {
+            @Override
+            public void onResponse(Call<List<ReservationResponse>> call, Response<List<ReservationResponse>> response) {
+                view.hideLoading();
+                Log.d(TAG, "Respuesta recibida: " + response.toString()); // Log completo de la respuesta
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ReservationResponse> reservations = response.body();
+                    Log.d(TAG, "Reservas recibidas: " + reservations.toString()); // Log de las reservas
+                    view.showReservations(reservations);
+                } else {
+                    Log.e(TAG, "Error al obtener reservas: " + response.errorBody()); // Log del error
+                    view.showError("Error al obtener las reservas");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReservationResponse>> call, Throwable t) {
+                view.hideLoading();
+                Log.e(TAG, "Error en la petición: " + t.getMessage()); // Log del fallo
+                view.showError("Error: " + t.getMessage());
+            }
+        });
     }
 
     @Override

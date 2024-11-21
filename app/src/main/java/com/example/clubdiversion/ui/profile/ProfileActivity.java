@@ -7,14 +7,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clubdiversion.R;
+import com.example.clubdiversion.data.entities.ReservationResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity implements ProfileContract.View {
 
     private TextView txtName, txtEmail, txtPhone, txtAddress;
     private ProgressBar progressBar;
     private ProfileContract.Presenter presenter;
+    private RecyclerView recyclerViewReservations;
+    private ReservationsAdapter reservationsAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +34,23 @@ public class ProfileActivity extends AppCompatActivity implements ProfileContrac
         txtEmail = findViewById(R.id.txtEmail);
         txtPhone = findViewById(R.id.txtPhone);
         txtAddress = findViewById(R.id.txtAddress);
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBarProfile);
+
+        recyclerViewReservations = findViewById(R.id.recyclerViewReservations);
+
+        // Configuración del RecyclerView
+        reservationsAdapter = new ReservationsAdapter(new ArrayList<>());
+        recyclerViewReservations.setAdapter(reservationsAdapter);
+        recyclerViewReservations.setLayoutManager(new LinearLayoutManager(this));
 
         presenter = new ProfilePresenter(this, this);
         presenter.loadProfile();
+        presenter.loadReservations();
+    }
+
+    @Override
+    public void showReservations(List<ReservationResponse> reservations) {
+        reservationsAdapter.updateReservations(reservations); // Actualiza el adaptador con las reservas recibidas
     }
 
     @Override
