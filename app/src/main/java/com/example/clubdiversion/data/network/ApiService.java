@@ -25,5 +25,8 @@ public interface ApiService {
             @retrofit2.http.Header("Authorization") String token
     );
 
+    @POST("api/users/profile/")
+    Call<LoginResponse> getProfile(@retrofit2.http.Header("Authorization") String token);
+
 }
 

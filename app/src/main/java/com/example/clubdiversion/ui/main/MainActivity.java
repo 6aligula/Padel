@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.clubdiversion.R;
 import com.example.clubdiversion.ui.instalaciones.InstalacionesActivity;
 import com.example.clubdiversion.ui.login.LoginActivity;
+import com.example.clubdiversion.ui.profile.ProfileActivity;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
@@ -42,12 +43,20 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         int id = item.getItemId();
         if (id == R.id.Instalaciones) {
             navigateToInstalaciones();
+        } else if (id == R.id.Profile) { // Nuevo caso para Perfil
+            navigateToProfile();
         } else if (id == R.id.Logout) {
             presenter.logout();
         } else if (id == R.id.Salir) {
             closeApp();
         }
         return true;
+    }
+
+    @Override
+    public void navigateToProfile() {
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     @Override

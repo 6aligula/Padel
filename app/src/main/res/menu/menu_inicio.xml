@@ -8,6 +8,11 @@
         android:icon="@drawable/ic_instalaciones"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/Profile"
+        android:title="Perfil"
+        android:icon="@drawable/ic_profile"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/Logout"
         android:title="Logout"
         android:icon="@drawable/ic_logout"
