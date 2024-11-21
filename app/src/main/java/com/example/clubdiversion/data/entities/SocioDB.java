@@ -1,4 +1,4 @@
-package com.example.clubdiversion.Entidades;
+package com.example.clubdiversion.data.entities;
 
 public class SocioDB {
     private Integer id;

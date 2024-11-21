@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Reservaciones">
+    tools:context=".ui.reservaciones.ReservacionesActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -87,15 +87,15 @@
         <TextView
             android:id="@+id/editfechaReser"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
+            android:clickable="true"
             android:ems="10"
-            android:text="Pulse aquí para la fecha"
-            android:textColor="@color/black"
+            android:paddingLeft="20sp"
             android:paddingTop="10sp"
             android:paddingBottom="10sp"
-            android:textSize="20sp"
-            android:paddingLeft="20sp"
-            />
+            android:text="Pulse aquí para la fecha"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/aceptarReser"

@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.clubdiversion.Instalaciones;
 import com.example.clubdiversion.R;
+import com.example.clubdiversion.ui.instalaciones.InstalacionesActivity;
 import com.example.clubdiversion.ui.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity implements LoginContract.View {
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void navigateToHome() {
-        Intent intent = new Intent(LoginActivity.this, Instalaciones.class);
+        Intent intent = new Intent(LoginActivity.this, InstalacionesActivity.class);
         startActivity(intent);
         finish();
     }
