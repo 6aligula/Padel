@@ -3,12 +3,19 @@ package com.example.clubdiversion.ui.reservaciones;
 import android.app.DatePickerDialog;
 import android.content.Context;
 
+import com.example.clubdiversion.data.entities.ReservationRequest;
+import com.example.clubdiversion.data.entities.ReservationResponse;
 import com.example.clubdiversion.data.repository.ReservacionesRepository;
+import com.example.clubdiversion.data.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ReservacionesPresenter implements ReservacionesContract.Presenter {
 
@@ -48,7 +55,7 @@ public class ReservacionesPresenter implements ReservacionesContract.Presenter {
         if (selectedDate < currentDate) {
             view.showDateError();
         } else {
-            String formattedDate = String.format(Locale.getDefault(), "%02d-%02d-%02d", day, month + 1, year);
+            String formattedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, day);
             view.showDate(formattedDate);
         }
     }
@@ -60,13 +67,40 @@ public class ReservacionesPresenter implements ReservacionesContract.Presenter {
             return;
         }
 
-        boolean isReserved = repository.isReservationTaken(date, reservationNumber);
-        if (isReserved) {
+        if (repository.isReservationTaken(date, reservationNumber)) {
             view.showReservationError("Instalación ya reservada");
-        } else {
-            repository.addReservation(date, reservationNumber);
-            view.showReservationSuccess();
+            return;
         }
+
+        // Obtén el token desde UserRepository
+        UserRepository userRepository = new UserRepository((Context) view);
+        String token = userRepository.getToken();
+
+        if (token == null) {
+            view.showReservationError("Token no encontrado. Por favor, inicia sesión.");
+            return;
+        }
+
+        // Crea el objeto de la reserva
+        ReservationRequest request = new ReservationRequest(reservationNumber, date);
+
+        // Llama al repositorio para enviar la reserva
+        repository.addReservationToBackend(request, token, new Callback<ReservationResponse>() {
+            @Override
+            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    view.showReservationSuccess();
+                    repository.markReservationAsSynced(request);
+                } else {
+                    view.showReservationError("Error al realizar la reserva: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReservationResponse> call, Throwable t) {
+                view.showReservationError("Error de red al realizar la reserva: " + t.getMessage());
+            }
+        });
     }
 
     @Override

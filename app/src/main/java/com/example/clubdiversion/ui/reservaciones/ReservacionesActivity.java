@@ -39,7 +39,8 @@ public class ReservacionesActivity extends AppCompatActivity implements Reservac
 
 
         Bundle bundle = getIntent().getExtras();
-        reservationNumber = bundle.getInt("Imagen");
+       // reservationNumber = bundle.getInt("Imagen");
+        reservationNumber = bundle.getInt("installation_id", -1); // Obtén installation_id correctamente
         int imageResource = bundle.getInt("Imagen", -1); // Valor predeterminado para evitar crashes
         Log.d("ReservacionesActivity", "Recurso recibido: " + imageResource);
         if (imageResource != -1) {

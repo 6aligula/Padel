@@ -109,4 +109,26 @@ public class UserRepository {
 
         return result != -1; // Devuelve true si la inserción fue exitosa
     }
+
+    public String getToken() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String token = null;
+        Cursor cursor = null;
+
+        try {
+            String query = "SELECT " + DatabaseSchema.CAMPO_TOKEN + " FROM " + DatabaseSchema.TABLA_USERS + " LIMIT 1";
+            cursor = db.rawQuery(query, null);
+
+            if (cursor.moveToFirst()) {
+                token = cursor.getString(0); // Recupera el token
+            }
+        } catch (Exception e) {
+            Log.e("UserRepository", "Error al recuperar el token: " + e.getMessage());
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return token; // Devuelve el token o null si no existe
+    }
 }

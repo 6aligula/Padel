@@ -46,17 +46,19 @@ public class DatabaseSchema {
             ""+DUDA_RESP+" TEXT)";
 
 
-    //CAMPOS instalacion
+    // CAMPOS instalacion
     public static final String T_INST = "insta";
     public static final String INST_ID = "id";
     public static final String INST_ID_INST = "idInsta";
     public static final String INST_FECHA = "Fecha";
+    public static final String INST_SYNCED = "inst_synced"; // Nuevo campo para sincronización
 
-    //CREA TABLA Instalaciones
-    public static final String CREA_TABLA_INSTA = "CREATE TABLE "+T_INST +
-            " ("+INST_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            ""+INST_ID_INST+" TEXT, " +
-            ""+INST_FECHA+" TEXT)";
+    // CREA TABLA Instalaciones
+    public static final String CREA_TABLA_INSTA = "CREATE TABLE " + T_INST +
+            " (" + INST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "" + INST_ID_INST + " TEXT, " +
+            "" + INST_FECHA + " TEXT, " +
+            "" + INST_SYNCED + " INTEGER DEFAULT 0)"; // Se añade INST_SYNCED
 
 }
 

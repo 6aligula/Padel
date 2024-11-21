@@ -59,7 +59,8 @@ public class InstalacionesActivity extends AppCompatActivity implements Instalac
             };
 
             Intent intent = new Intent(this, ReservacionesActivity.class);
-            intent.putExtra("Imagen", imageResources[logicalIndex]); // Usa el índice lógico
+            intent.putExtra("installation_id", num); // Pasa el ID de la instalación en lugar de "Imagen"
+            intent.putExtra("Imagen", imageResources[logicalIndex]); // paso la imagen
             intent.putExtra("Espacio", espacio);
             intent.putExtra("capacidad", capacidad);
             intent.putExtra("techado", techado);
