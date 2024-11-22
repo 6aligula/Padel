@@ -6,13 +6,16 @@ import com.example.clubdiversion.data.entities.RegisterRequest;
 import com.example.clubdiversion.data.entities.RegisterResponse;
 import com.example.clubdiversion.data.entities.ReservationRequest;
 import com.example.clubdiversion.data.entities.ReservationResponse;
+import com.example.clubdiversion.data.entities.UserResponse;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 public interface ApiService {
 
@@ -35,7 +38,19 @@ public interface ApiService {
             @retrofit2.http.Header("Authorization") String token
     );
 
+    @GET("api/users/all/")
+    Call<List<UserResponse>> getAllUsers(@retrofit2.http.Header("Authorization") String token);
 
+    @PUT("api/users/update/{id}/")
+    Call<UserResponse> updateUser(
+            @retrofit2.http.Path("id") int id,
+            @retrofit2.http.Header("Authorization") String token,
+            @Body UserResponse user);
+
+    @DELETE("api/users/delete/{id}/")
+    Call<Void> deleteUser(
+            @retrofit2.http.Path("id") int id,
+            @retrofit2.http.Header("Authorization") String token);
 
 }
 

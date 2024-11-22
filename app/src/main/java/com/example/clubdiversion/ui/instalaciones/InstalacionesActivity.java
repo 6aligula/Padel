@@ -87,8 +87,6 @@ public class InstalacionesActivity extends AppCompatActivity implements Instalac
             menuOption = 1;
         } else if (item.getItemId() == R.id.Item2) {
             menuOption = 2;
-        } else if (item.getItemId() == R.id.Item3) {
-            menuOption = 3;
         } else if (item.getItemId() == R.id.Item4) {
             menuOption = 4;
         }
@@ -123,12 +121,6 @@ public class InstalacionesActivity extends AppCompatActivity implements Instalac
     @Override
     public void navigateToDocumento() {
         Intent intent = new Intent(this, DocumentoActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void navigateToRegister() {
-        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 

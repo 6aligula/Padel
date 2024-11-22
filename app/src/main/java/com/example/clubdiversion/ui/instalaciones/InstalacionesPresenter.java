@@ -25,13 +25,6 @@ public class InstalacionesPresenter implements InstalacionesContract.Presenter {
             case 2: // Opción 2
                 view.navigateToDocumento();
                 break;
-            case 3: // Opción 3 (requiere verificación de administrador)
-                if (repository.isCurrentUserAdmin()) {
-                    view.navigateToRegister();
-                } else {
-                    view.showAdminError();
-                }
-                break;
             case 4: // Opción 4 (cerrar actividad)
                 view.closeActivity();
                 break;

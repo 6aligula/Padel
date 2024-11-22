@@ -10,6 +10,8 @@
             └── LoginResponse.java
             └── RegisterRequest.java
             └── RegisterResponse.java
+            └── ReservationRequest.java
+            └── ReservationResponse.java
             └── SocioDB.java
         └── 📁network
             └── ApiService.java
@@ -41,6 +43,11 @@
             └── MainActivity.java
             └── MainContract.java
             └── MainPresenter.java
+        └── 📁profile
+            └── ProfileActivity.java
+            └── ProfileContract.java
+            └── ProfilePresenter.java
+            └── ReservationsAdapter.java
         └── 📁register
             └── RegisterActivity.java
             └── RegisterContract.java
@@ -53,5 +60,6 @@
     └── MainActivity2.java
     └── prueba.java
     └── strcutre.md
+    └── structure2.md
     └── VariableGlobales.java
 ```

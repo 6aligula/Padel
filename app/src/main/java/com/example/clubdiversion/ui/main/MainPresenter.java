@@ -17,15 +17,25 @@ public class MainPresenter implements MainContract.Presenter {
     public void checkUser() {
         SocioDB currentUser = userRepository.getCurrentUser();
 
+        // Log para verificar el estado del usuario
         if (currentUser == null || currentUser.getId() == null) {
+            android.util.Log.d("MainPresenter", "Usuario no autenticado, navegando a Login.");
             view.navigateToLogin();
         } else {
+            android.util.Log.d("MainPresenter", "Usuario autenticado: " + currentUser.getNombre());
+            android.util.Log.d("MainPresenter", "¿Es administrador?: " + currentUser.getSocioAdmin());
+
             String welcomeMessage = currentUser.getSocioAdmin() ?
                     "Bienvenido Admin: " + currentUser.getNombre() :
                     "Bienvenido Usuario: " + currentUser.getNombre();
             view.showWelcomeMessage(welcomeMessage);
+
+            // Log para verificar visibilidad del menú
+            android.util.Log.d("MainPresenter", "Configurando visibilidad del menú Admin.");
+            view.setAdminMenuVisibility(currentUser.getSocioAdmin());
         }
     }
+
 
     @Override
     public void logout() {

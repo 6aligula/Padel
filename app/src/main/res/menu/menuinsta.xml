@@ -10,10 +10,6 @@
         android:title="Documentos"
         android:id="@+id/Item2"
         />
-    <item
-        android:title="Registro de usuarios"
-        android:id="@+id/Item3"
-        />
 
     <item
         android:title="Salir"

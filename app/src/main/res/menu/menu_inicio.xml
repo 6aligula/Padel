@@ -17,6 +17,11 @@
         android:title="Logout"
         android:icon="@drawable/ic_logout"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/Admin"
+        android:title="Admin"
+        android:icon="@drawable/ic_admin"
+        app:showAsAction="never" />
 
     <item
         android:title="Salir"

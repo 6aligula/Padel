@@ -5,8 +5,10 @@ public interface MainContract {
         void showWelcomeMessage(String message);
         void navigateToLogin();
         void navigateToInstalaciones();
+        void navigateToAdmin();
         void navigateToProfile();
         void closeApp();
+        void setAdminMenuVisibility(boolean isVisible);
     }
 
     interface Presenter {
