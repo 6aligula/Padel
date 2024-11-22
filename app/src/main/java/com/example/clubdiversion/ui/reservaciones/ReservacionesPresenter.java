@@ -92,7 +92,8 @@ public class ReservacionesPresenter implements ReservacionesContract.Presenter {
                     view.showReservationSuccess();
                     repository.markReservationAsSynced(request);
                 } else {
-                    view.showReservationError("Error al realizar la reserva: " + response.code());
+                    view.showReservationError("Error al realizar la reserva: Fecha no disponible");
+                    //view.showReservationError("Error al realizar la reserva: " + response.code());
                 }
             }
 
