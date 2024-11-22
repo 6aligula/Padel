@@ -1,5 +1,7 @@
 package com.example.clubdiversion.ui.admin;
 
+import android.util.Log;
+
 import com.example.clubdiversion.data.entities.UserResponse;
 import com.example.clubdiversion.data.network.ApiService;
 import com.example.clubdiversion.data.repository.UserRepository;
@@ -32,9 +34,12 @@ public class AdminUserPresenter implements AdminUserContract.Presenter {
             @Override
             public void onResponse(Call<List<UserResponse>> call, Response<List<UserResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    for (UserResponse user : response.body()) {
+                        Log.d("AdminUserPresenter", "User ID: " + user.getId() + ", isAdmin: " + user.isAdmin());
+                    }
                     view.showUsers(response.body());
                 } else {
-                    view.showError("Error al obtener usuarios");
+                    view.showError("Error al obtener usuarios.");
                 }
             }
 
@@ -45,15 +50,25 @@ public class AdminUserPresenter implements AdminUserContract.Presenter {
         });
     }
 
+
     @Override
-    public void updateUser(int userId, UserResponse user) {
+    public void updateUser(int userId, UserResponse user, String password) {
+        if (token.isEmpty()) {
+            view.showError("Token no válido. Inicie sesión nuevamente.");
+            return;
+        }
+
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(password);
+        }
+
         apiService.updateUser(userId, token, user).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.isSuccessful()) {
-                    view.showSuccess("Usuario actualizado");
+                    view.showSuccess("Usuario actualizado con éxito.");
                 } else {
-                    view.showError("Error al actualizar usuario");
+                    view.showError("Error al actualizar usuario.");
                 }
             }
 

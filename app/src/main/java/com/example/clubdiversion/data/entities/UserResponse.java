@@ -7,6 +7,8 @@ public class UserResponse {
     private String direccion;
     private String telefono;
     private boolean isAdmin;
+    private String password; // Campo adicional para la contraseña
+
 
     // Constructor
     public UserResponse(int id, String username, String name, String direccion, String telefono, boolean isAdmin) {
@@ -65,5 +67,13 @@ public class UserResponse {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

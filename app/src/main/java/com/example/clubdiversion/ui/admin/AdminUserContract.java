@@ -13,7 +13,7 @@ public interface AdminUserContract {
 
     interface Presenter {
         void getAllUsers();
-        void updateUser(int userId, UserResponse user);
+        void updateUser(int userId, UserResponse user, String password);
         void deleteUser(int userId);
     }
 }

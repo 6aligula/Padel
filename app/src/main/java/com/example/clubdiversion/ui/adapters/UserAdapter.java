@@ -23,9 +23,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private final List<UserResponse> userList;
     private final OnUserDeleteListener onDeleteListener;
 
-    public UserAdapter(List<UserResponse> userList, OnUserDeleteListener onDeleteListener) {
+    public interface OnUserClickListener {
+        void onClick(UserResponse user);
+    }
+
+    private final OnUserClickListener onClickListener;
+
+    public UserAdapter(List<UserResponse> userList, OnUserDeleteListener onDeleteListener, OnUserClickListener onClickListener) {
         this.userList = userList;
         this.onDeleteListener = onDeleteListener;
+        this.onClickListener = onClickListener;
     }
 
     @NonNull
@@ -48,6 +55,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.btnDelete.setOnClickListener(view -> {
             if (onDeleteListener != null) {
                 onDeleteListener.onDelete(user.getId());
+            }
+        });
+
+        holder.itemView.setOnClickListener(view -> {
+            if (onClickListener != null) {
+                onClickListener.onClick(user);
             }
         });
     }
