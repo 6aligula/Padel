@@ -28,6 +28,44 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     }
 
     @Override
+    public void refreshUserProfile() {
+        view.showLoading();
+
+        String token = userRepository.getToken();
+        if (token == null) {
+            view.showError("El usuario no ha iniciado sesión");
+            view.hideLoading();
+            return;
+        }
+
+        ApiService apiService = RetrofitClient.getApiService();
+        apiService.getProfile("Bearer " + token).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                view.hideLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    LoginResponse userProfile = response.body();
+                    userProfile.setToken(token); // Asigna el token al perfil obtenido
+
+                    boolean updated = userRepository.saveUser(userProfile);
+                    if (updated) {
+                        view.showProfile(userProfile.getName(), userProfile.getUsername(), userProfile.getTelefono(), userProfile.getDireccion());
+                    } else {
+                        view.showError("No se pudo actualizar el perfil localmente.");
+                    }
+                } else {
+                    view.showError("Error al obtener el perfil del usuario.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                view.hideLoading();
+                view.showError("Error de red: " + t.getMessage());
+            }
+        });
+    }
+    @Override
     public void loadReservations() {
         view.showLoading();
 

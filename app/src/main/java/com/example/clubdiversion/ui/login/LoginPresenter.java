@@ -12,6 +12,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.util.Log;
+
 public class LoginPresenter implements LoginContract.Presenter {
     private final LoginContract.View view;
     private final UserRepository userRepository;
@@ -34,6 +36,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 view.hideProgress();
 
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.d("LoginPresenter", "Token recibido: " + response.body().getToken());
                     boolean isSaved = userRepository.saveUser(response.body());
                     if (isSaved) {
                         view.showLoginSuccess();

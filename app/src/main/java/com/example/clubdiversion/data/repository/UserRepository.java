@@ -104,10 +104,26 @@ public class UserRepository {
         values.put(DatabaseSchema.CAMPO_IS_ADMIN, loginResponse.isAdmin() ? 1 : 0);
         values.put(DatabaseSchema.CAMPO_TOKEN, loginResponse.getToken());
 
-        long result = db.insert(DatabaseSchema.TABLA_USERS, null, values);
-        db.close();
+        // Asegúrate de que el token no sea null
+        if (loginResponse.getToken() != null) {
+            values.put(DatabaseSchema.CAMPO_TOKEN, loginResponse.getToken());
+        } else {
+            Log.e("UserRepository", "El token es null al intentar guardar.");
+        }
 
-        return result != -1; // Devuelve true si la inserción fue exitosa
+        Log.d("UserRepository", "Guardando usuario: " + values.toString());
+
+        // Actualizar si ya existe
+        int rowsUpdated = db.update(DatabaseSchema.TABLA_USERS, values, DatabaseSchema.CAMPO_ID + " = ?", new String[]{String.valueOf(loginResponse.getId())});
+        if (rowsUpdated == 0) {
+            // Si no se actualizó, intenta insertar
+            long result = db.insert(DatabaseSchema.TABLA_USERS, null, values);
+            db.close();
+            return result != -1; // Devuelve true si la inserción fue exitosa
+        }
+
+        db.close();
+        return true;
     }
 
     public String getToken() {
@@ -121,6 +137,7 @@ public class UserRepository {
 
             if (cursor.moveToFirst()) {
                 token = cursor.getString(0); // Recupera el token
+                Log.d("UserRepository", "Token recuperado: " + token);
             }
         } catch (Exception e) {
             Log.e("UserRepository", "Error al recuperar el token: " + e.getMessage());

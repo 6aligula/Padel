@@ -17,5 +17,6 @@ public interface ProfileContract {
         void loadProfile();
         void loadReservations(); // Metodo para cargar las reservas
 
+        void refreshUserProfile();
     }
 }

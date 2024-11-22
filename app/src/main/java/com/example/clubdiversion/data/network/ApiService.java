@@ -31,7 +31,7 @@ public interface ApiService {
             @retrofit2.http.Header("Authorization") String token
     );
 
-    @POST("api/users/profile/")
+    @GET("api/users/profile/")
     Call<LoginResponse> getProfile(@retrofit2.http.Header("Authorization") String token);
     @GET("api/reservations/get/")
     Call<List<ReservationResponse>> getReservations(

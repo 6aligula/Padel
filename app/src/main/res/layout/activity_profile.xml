@@ -137,6 +137,13 @@
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+        <!-- Botón de edición -->
+        <Button
+            android:id="@+id/buttonEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Editar Perfil" />
+
         <TextView
             android:id="@+id/txtReservationsTitle"
             android:layout_width="match_parent"
@@ -154,8 +161,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp" />
 
-
-        <!-- Botón de edición -->
         <!-- ProgressBar -->
         <ProgressBar
             android:id="@+id/progressBarProfile"
