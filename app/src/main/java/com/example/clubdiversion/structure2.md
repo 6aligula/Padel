@@ -13,6 +13,7 @@
             └── ReservationRequest.java
             └── ReservationResponse.java
             └── SocioDB.java
+            └── UserResponse.java
         └── 📁network
             └── ApiService.java
             └── RetrofitClient.java
@@ -23,6 +24,12 @@
             └── ReservacionesRepository.java
             └── UserRepository.java
     └── 📁ui
+        └── 📁adapters
+            └── UserAdapter.java
+        └── 📁admin
+            └── AdminUserActivity.java
+            └── AdminUserContract.java
+            └── AdminUserPresenter.java
         └── 📁documento
             └── DocumentoActivity.java
             └── DocumentoContract.java

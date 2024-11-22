@@ -1,5 +1,6 @@
 package com.example.clubdiversion.ui.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -39,8 +40,8 @@ public class AdminUserActivity extends AppCompatActivity implements AdminUserCon
         presenter.getAllUsers();
 
         btnAddUser.setOnClickListener(view -> {
-            // Implementar funcionalidad para agregar usuario
-            Toast.makeText(this, "Agregar usuario no implementado", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(AdminUserActivity.this, com.example.clubdiversion.ui.register.RegisterActivity.class);
+            startActivity(intent);
         });
     }
 
