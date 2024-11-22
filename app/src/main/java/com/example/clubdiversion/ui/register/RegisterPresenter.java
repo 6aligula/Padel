@@ -1,9 +1,12 @@
 package com.example.clubdiversion.ui.register;
 
+import android.content.Context;
+
 import com.example.clubdiversion.data.entities.RegisterRequest;
 import com.example.clubdiversion.data.entities.RegisterResponse;
 import com.example.clubdiversion.data.network.ApiService;
 import com.example.clubdiversion.data.network.RetrofitClient;
+import com.example.clubdiversion.data.repository.UserRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,8 +33,17 @@ public class RegisterPresenter implements RegisterContract.Presenter {
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                     view.hideProgress();
                     if (response.isSuccessful() && response.body() != null) {
-                        view.showRegisterSuccess("Registro exitoso. Bienvenido, " + response.body().getUsername());
-                        view.navigateToLogin();
+                        // Verificar si hay un usuario en SQLite
+                        UserRepository userRepository = new UserRepository((Context) view);
+                        boolean isAdminLoggedIn = userRepository.isCurrentUserAdmin();
+                        if (isAdminLoggedIn) {
+                            // Si un administrador está logueado, no guardamos el nuevo usuario en SQLite
+                            view.showRegisterSuccess("Usuario registrado exitosamente por el administrador");
+                            view.navigateToAdmin(); // Regresar al panel de administración
+                        } else {
+                            view.showRegisterSuccess("Registro exitoso. Por favor, inicia sesión");
+                            view.navigateToLogin(); // Redirigir al login
+                        }
                     } else {
                         view.showRegisterError("Error en el registro");
                     }

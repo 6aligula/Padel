@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.clubdiversion.R;
+import com.example.clubdiversion.ui.admin.AdminUserActivity;
 import com.example.clubdiversion.ui.login.LoginActivity;
 
 public class RegisterActivity extends AppCompatActivity implements RegisterContract.View {
@@ -73,4 +74,11 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
         startActivity(intent);
         finish();
     }
+    @Override
+    public void navigateToAdmin() {
+        Intent intent = new Intent(RegisterActivity.this, AdminUserActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 }

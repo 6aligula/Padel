@@ -7,6 +7,8 @@ public interface RegisterContract {
         void showRegisterSuccess(String message);
         void showRegisterError(String error);
         void navigateToLogin();
+        void navigateToAdmin();
+
     }
 
     interface Presenter {
