@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.clubdiversion.R;
 import com.example.clubdiversion.ui.instalaciones.InstalacionesActivity;
+import com.example.clubdiversion.ui.main.MainActivity;
 import com.example.clubdiversion.ui.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity implements LoginContract.View {
@@ -76,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void navigateToHome() {
-        Intent intent = new Intent(LoginActivity.this, InstalacionesActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
